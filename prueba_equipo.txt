@@ -1,4 +1,0 @@
-PRUEBA DE TRABAJO EN EQUIPO
-Proyecto: Chat distribuido con Python y gRPC
-Integrante que crea el archivo: Karen
-Objetivo: comprobar la sincronización con GitHub.
