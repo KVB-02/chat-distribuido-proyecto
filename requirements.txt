@@ -1,2 +1,5 @@
-grpcio==1.84.1
+Flask
+grpcio
 grpcio-tools
+protobuf
+Werkzeug
