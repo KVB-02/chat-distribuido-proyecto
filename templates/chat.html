@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Distribuido</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="chat-page">
+
+    <div class="chat-layout">
+
+        <aside class="sidebar">
+            <header class="sidebar-header">
+                <div class="brand-icon small">💬</div>
+                <div>
+                    <h2>Chat Distribuido</h2>
+                    <span class="connection-label">
+                        <span class="status-dot"></span>
+                        Aplicación web
+                    </span>
+                </div>
+            </header>
+
+            <section class="user-panel">
+                <div class="avatar">{{ username[0]|upper }}</div>
+                <div class="user-info">
+                    <strong>{{ username }}</strong>
+                    <span>Usuario conectado</span>
+                </div>
+            </section>
+
+            <section class="rooms-section">
+                <div class="section-heading">
+                    <h3>Salas de chat</h3>
+                    <button id="create-room-button" class="icon-button"
+                            type="button" title="Crear sala">+</button>
+                </div>
+
+                <form id="create-room-form" class="hidden">
+                    <input
+                        type="text"
+                        id="room-name"
+                        maxlength="50"
+                        placeholder="Nombre de la sala"
+                        required
+                    >
+                    <button type="submit" class="btn-primary">Crear</button>
+                </form>
+
+                <div id="rooms-list" class="rooms-list">
+                    <p class="muted">Cargando salas...</p>
+                </div>
+            </section>
+
+            <footer class="sidebar-footer">
+                <form action="{{ url_for('logout') }}" method="POST">
+                    <button type="submit" class="btn-logout">
+                        Cerrar sesión
+                    </button>
+                </form>
+            </footer>
+        </aside>
+
+        <main class="conversation">
+
+            <header class="conversation-header">
+                <div>
+                    <h1 id="current-room-name">Selecciona una sala</h1>
+                    <p id="room-description">Mensajería distribuida mediante gRPC</p>
+                </div>
+                <span id="connection-status" class="status-badge">
+                    Conectando...
+                </span>
+            </header>
+
+            <section id="messages-container" class="messages-container">
+                <div class="welcome-message">
+                    <div class="welcome-icon">💬</div>
+                    <h2>Bienvenido al chat</h2>
+                    <p>Selecciona una sala para comenzar a conversar.</p>
+                </div>
+            </section>
+
+            <div id="notification" class="notification hidden"></div>
+
+            <form id="message-form" class="message-form">
+                <input
+                    type="text"
+                    id="message-input"
+                    placeholder="Escribe un mensaje..."
+                    maxlength="2000"
+                    autocomplete="off"
+                    disabled
+                >
+                <button type="submit" id="send-button" disabled>
+                    Enviar ➤
+                </button>
+            </form>
+
+            <footer class="conversation-footer">
+                Los mensajes se almacenan en la base de datos del servidor.
+            </footer>
+
+        </main>
+    </div>
+
+    <script>
+        window.CHAT_USERNAME = {{ username|tojson }};
+    </script>
+    <script src="{{ url_for('static', filename='chat.js') }}"></script>
+
+</body>
+</html>
