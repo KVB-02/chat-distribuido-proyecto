@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nchat.proto\x12\x04\x63hat\"\x07\n\x05\x45mpty\"2\n\x0bRoomRequest\x12\x11\n\troom_name\x18\x01 \x01(\t\x12\x10\n\x08username\x18\x02 \x01(\t\"A\n\x0cRoomResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\x12\x0f\n\x07room_id\x18\x03 \x01(\x05\".\n\x08RoomInfo\x12\x0f\n\x07room_id\x18\x01 \x01(\x05\x12\x11\n\troom_name\x18\x02 \x01(\t\")\n\x08RoomList\x12\x1d\n\x05rooms\x18\x01 \x03(\x0b\x32\x0e.chat.RoomInfo\"D\n\x0eMessageRequest\x12\x0f\n\x07room_id\x18\x01 \x01(\x05\x12\x10\n\x08username\x18\x02 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x03 \x01(\t\"Z\n\x0fMessageResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\x12\x12\n\nmessage_id\x18\x03 \x01(\x05\x12\x11\n\ttimestamp\x18\x04 \x01(\t\"0\n\x0eHistoryRequest\x12\x0f\n\x07room_id\x18\x01 \x01(\x05\x12\r\n\x05limit\x18\x02 \x01(\x05\"h\n\x0b\x43hatMessage\x12\x12\n\nmessage_id\x18\x01 \x01(\x05\x12\x0f\n\x07room_id\x18\x02 \x01(\x05\x12\x10\n\x08username\x18\x03 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x04 \x01(\t\x12\x11\n\ttimestamp\x18\x05 \x01(\t\"2\n\x0bMessageList\x12#\n\x08messages\x18\x01 \x03(\x0b\x32\x11.chat.ChatMessage2\xe0\x01\n\x0b\x43hatService\x12\x33\n\nCreateRoom\x12\x11.chat.RoomRequest\x1a\x12.chat.RoomResponse\x12(\n\tListRooms\x12\x0b.chat.Empty\x1a\x0e.chat.RoomList\x12:\n\x0bSendMessage\x12\x14.chat.MessageRequest\x1a\x15.chat.MessageResponse\x12\x36\n\x0bGetMessages\x12\x14.chat.HistoryRequest\x1a\x11.chat.MessageListb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nchat.proto\x12\x04\x63hat\"\x07\n\x05\x45mpty\"2\n\x0bRoomRequest\x12\x11\n\troom_name\x18\x01 \x01(\t\x12\x10\n\x08username\x18\x02 \x01(\t\"A\n\x0cRoomResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\x12\x0f\n\x07room_id\x18\x03 \x01(\x05\".\n\x08RoomInfo\x12\x0f\n\x07room_id\x18\x01 \x01(\x05\x12\x11\n\troom_name\x18\x02 \x01(\t\")\n\x08RoomList\x12\x1d\n\x05rooms\x18\x01 \x03(\x0b\x32\x0e.chat.RoomInfo\"D\n\x0eMessageRequest\x12\x0f\n\x07room_id\x18\x01 \x01(\x05\x12\x10\n\x08username\x18\x02 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x03 \x01(\t\"Z\n\x0fMessageResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\x12\x12\n\nmessage_id\x18\x03 \x01(\x05\x12\x11\n\ttimestamp\x18\x04 \x01(\t\"B\n\x0eHistoryRequest\x12\x0f\n\x07room_id\x18\x01 \x01(\x05\x12\r\n\x05limit\x18\x02 \x01(\x05\x12\x10\n\x08username\x18\x03 \x01(\t\"h\n\x0b\x43hatMessage\x12\x12\n\nmessage_id\x18\x01 \x01(\x05\x12\x0f\n\x07room_id\x18\x02 \x01(\x05\x12\x10\n\x08username\x18\x03 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x04 \x01(\t\x12\x11\n\ttimestamp\x18\x05 \x01(\t\"2\n\x0bMessageList\x12#\n\x08messages\x18\x01 \x03(\x0b\x32\x11.chat.ChatMessage2\xe0\x01\n\x0b\x43hatService\x12\x33\n\nCreateRoom\x12\x11.chat.RoomRequest\x1a\x12.chat.RoomResponse\x12(\n\tListRooms\x12\x0b.chat.Empty\x1a\x0e.chat.RoomList\x12:\n\x0bSendMessage\x12\x14.chat.MessageRequest\x1a\x15.chat.MessageResponse\x12\x36\n\x0bGetMessages\x12\x14.chat.HistoryRequest\x1a\x11.chat.MessageListb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -46,11 +46,11 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_MESSAGERESPONSE']._serialized_start=309
   _globals['_MESSAGERESPONSE']._serialized_end=399
   _globals['_HISTORYREQUEST']._serialized_start=401
-  _globals['_HISTORYREQUEST']._serialized_end=449
-  _globals['_CHATMESSAGE']._serialized_start=451
-  _globals['_CHATMESSAGE']._serialized_end=555
-  _globals['_MESSAGELIST']._serialized_start=557
-  _globals['_MESSAGELIST']._serialized_end=607
-  _globals['_CHATSERVICE']._serialized_start=610
-  _globals['_CHATSERVICE']._serialized_end=834
+  _globals['_HISTORYREQUEST']._serialized_end=467
+  _globals['_CHATMESSAGE']._serialized_start=469
+  _globals['_CHATMESSAGE']._serialized_end=573
+  _globals['_MESSAGELIST']._serialized_start=575
+  _globals['_MESSAGELIST']._serialized_end=625
+  _globals['_CHATSERVICE']._serialized_start=628
+  _globals['_CHATSERVICE']._serialized_end=852
 # @@protoc_insertion_point(module_scope)

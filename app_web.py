@@ -126,7 +126,7 @@ def api_list_rooms():
     try:
         channel, stub = get_grpc_stub()
 
-        response = stub.ListRooms(timeout=3)
+        response = stub.ListRooms(chat_pb2.Empty(), timeout=3)
 
         rooms = [
             {
@@ -228,7 +228,7 @@ def api_join_room(room_id):
 
 def _room_name_from_id(room_id, stub):
     """Busca el nombre de una sala a partir de su identificador."""
-    response = stub.ListRooms(timeout=3)
+    response = stub.ListRooms(chat_pb2.Empty(), timeout=3)
 
     for room in response.rooms:
         if room.room_id == room_id:
@@ -246,14 +246,13 @@ def api_get_messages(room_id):
         channel, stub = get_grpc_stub()
 
         response = stub.GetMessages(
-            chat_pb2.HistoryRequest(
-                room_id=room_id,
-                username=session["username"],
-                limit=100
-            ),
-            timeout=3
-        )
-
+    chat_pb2.HistoryRequest(
+        room_id=room_id,
+        limit=100,
+        username=session["username"]
+    ),
+    timeout=3
+)
         messages = [
             {
                 "id": message.message_id,

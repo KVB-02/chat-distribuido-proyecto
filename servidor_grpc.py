@@ -14,7 +14,7 @@ MAX_WORKERS = 20
 
 
 class ChatService(chat_pb2_grpc.ChatServiceServicer):
-    """Implementa las operaciones remotas definidas en chat.proto."""
+    """Implementa las operaciones remotas del chat distribuido."""
 
     def CreateRoom(self, request, context):
         try:
@@ -97,10 +97,10 @@ class ChatService(chat_pb2_grpc.ChatServiceServicer):
     def GetMessages(self, request, context):
         try:
             messages, error = database.get_messages(
-                request.room_id,
-                request.username,
-                request.limit
-            )
+    request.room_id,
+    request.username,
+    request.limit
+)
 
             if error:
                 context.abort(

@@ -45,9 +45,11 @@ message MessageResponse {
 }
 
 message HistoryRequest {
-  int32 room_id = 1;
-  int32 limit = 2;
+    int32 room_id = 1;
+    int32 limit = 2;
+    string username = 3;
 }
+
 
 message ChatMessage {
   int32 message_id = 1;
