@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nchat.proto\x12\x04\x63hat\"\x07\n\x05\x45mpty\"2\n\x0bRoomRequest\x12\x11\n\troom_name\x18\x01 \x01(\t\x12\x10\n\x08username\x18\x02 \x01(\t\"A\n\x0cRoomResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\x12\x0f\n\x07room_id\x18\x03 \x01(\x05\".\n\x08RoomInfo\x12\x0f\n\x07room_id\x18\x01 \x01(\x05\x12\x11\n\troom_name\x18\x02 \x01(\t\")\n\x08RoomList\x12\x1d\n\x05rooms\x18\x01 \x03(\x0b\x32\x0e.chat.RoomInfo\"D\n\x0eMessageRequest\x12\x0f\n\x07room_id\x18\x01 \x01(\x05\x12\x10\n\x08username\x18\x02 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x03 \x01(\t\"Z\n\x0fMessageResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\x12\x12\n\nmessage_id\x18\x03 \x01(\x05\x12\x11\n\ttimestamp\x18\x04 \x01(\t\"B\n\x0eHistoryRequest\x12\x0f\n\x07room_id\x18\x01 \x01(\x05\x12\r\n\x05limit\x18\x02 \x01(\x05\x12\x10\n\x08username\x18\x03 \x01(\t\"h\n\x0b\x43hatMessage\x12\x12\n\nmessage_id\x18\x01 \x01(\x05\x12\x0f\n\x07room_id\x18\x02 \x01(\x05\x12\x10\n\x08username\x18\x03 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x04 \x01(\t\x12\x11\n\ttimestamp\x18\x05 \x01(\t\"2\n\x0bMessageList\x12#\n\x08messages\x18\x01 \x03(\x0b\x32\x11.chat.ChatMessage2\xe0\x01\n\x0b\x43hatService\x12\x33\n\nCreateRoom\x12\x11.chat.RoomRequest\x1a\x12.chat.RoomResponse\x12(\n\tListRooms\x12\x0b.chat.Empty\x1a\x0e.chat.RoomList\x12:\n\x0bSendMessage\x12\x14.chat.MessageRequest\x1a\x15.chat.MessageResponse\x12\x36\n\x0bGetMessages\x12\x14.chat.HistoryRequest\x1a\x11.chat.MessageListb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nchat.proto\x12\x04\x63hat\"\x07\n\x05\x45mpty\"2\n\x0bRoomRequest\x12\x11\n\troom_name\x18\x01 \x01(\t\x12\x10\n\x08username\x18\x02 \x01(\t\"X\n\x12\x43reateGroupRequest\x12\x12\n\ngroup_name\x18\x01 \x01(\t\x12\x18\n\x10\x63reator_username\x18\x02 \x01(\t\x12\x14\n\x0cparticipants\x18\x03 \x03(\t\"A\n\x0cRoomResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\x12\x0f\n\x07room_id\x18\x03 \x01(\x05\"5\n\x10LeaveRoomRequest\x12\x0f\n\x07room_id\x18\x01 \x01(\x05\x12\x10\n\x08username\x18\x02 \x01(\t\"H\n\x11LeaveRoomResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\x12\x11\n\tnew_admin\x18\x03 \x01(\t\"=\n\x12SearchUsersRequest\x12\r\n\x05query\x18\x01 \x01(\t\x12\x18\n\x10\x65xclude_username\x18\x02 \x01(\t\"C\n\x0bUserSummary\x12\x0f\n\x07user_id\x18\x01 \x01(\x05\x12\x10\n\x08username\x18\x02 \x01(\t\x12\x11\n\tis_active\x18\x03 \x01(\x08\"7\n\x13SearchUsersResponse\x12 \n\x05users\x18\x01 \x03(\x0b\x32\x11.chat.UserSummary\".\n\x08RoomInfo\x12\x0f\n\x07room_id\x18\x01 \x01(\x05\x12\x11\n\troom_name\x18\x02 \x01(\t\")\n\x08RoomList\x12\x1d\n\x05rooms\x18\x01 \x03(\x0b\x32\x0e.chat.RoomInfo\"D\n\x0eMessageRequest\x12\x0f\n\x07room_id\x18\x01 \x01(\x05\x12\x10\n\x08username\x18\x02 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x03 \x01(\t\"Z\n\x0fMessageResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\x12\x12\n\nmessage_id\x18\x03 \x01(\x05\x12\x11\n\ttimestamp\x18\x04 \x01(\t\"B\n\x0eHistoryRequest\x12\x0f\n\x07room_id\x18\x01 \x01(\x05\x12\r\n\x05limit\x18\x02 \x01(\x05\x12\x10\n\x08username\x18\x03 \x01(\t\"h\n\x0b\x43hatMessage\x12\x12\n\nmessage_id\x18\x01 \x01(\x05\x12\x0f\n\x07room_id\x18\x02 \x01(\x05\x12\x10\n\x08username\x18\x03 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x04 \x01(\t\x12\x11\n\ttimestamp\x18\x05 \x01(\t\"2\n\x0bMessageList\x12#\n\x08messages\x18\x01 \x03(\x0b\x32\x11.chat.ChatMessage\"7\n\x12RoomMembersRequest\x12\x0f\n\x07room_id\x18\x01 \x01(\x05\x12\x10\n\x08username\x18\x02 \x01(\t\"c\n\nRoomMember\x12\x0f\n\x07user_id\x18\x01 \x01(\x05\x12\x10\n\x08username\x18\x02 \x01(\t\x12\x11\n\tis_active\x18\x03 \x01(\x08\x12\x11\n\tlast_seen\x18\x04 \x01(\t\x12\x0c\n\x04role\x18\x05 \x01(\t\"4\n\x0fRoomMembersList\x12!\n\x07members\x18\x01 \x03(\x0b\x32\x10.chat.RoomMember\"6\n\x0fPresenceRequest\x12\x10\n\x08username\x18\x01 \x01(\t\x12\x11\n\tis_online\x18\x02 \x01(\x08\"#\n\x10PresenceResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\xa3\x04\n\x0b\x43hatService\x12\x33\n\nCreateRoom\x12\x11.chat.RoomRequest\x1a\x12.chat.RoomResponse\x12;\n\x0b\x43reateGroup\x12\x18.chat.CreateGroupRequest\x1a\x12.chat.RoomResponse\x12<\n\tLeaveRoom\x12\x16.chat.LeaveRoomRequest\x1a\x17.chat.LeaveRoomResponse\x12\x42\n\x0bSearchUsers\x12\x18.chat.SearchUsersRequest\x1a\x19.chat.SearchUsersResponse\x12(\n\tListRooms\x12\x0b.chat.Empty\x1a\x0e.chat.RoomList\x12:\n\x0bSendMessage\x12\x14.chat.MessageRequest\x1a\x15.chat.MessageResponse\x12\x36\n\x0bGetMessages\x12\x14.chat.HistoryRequest\x1a\x11.chat.MessageList\x12\x41\n\x0eGetRoomMembers\x12\x18.chat.RoomMembersRequest\x1a\x15.chat.RoomMembersList\x12?\n\x0eUpdatePresence\x12\x15.chat.PresenceRequest\x1a\x16.chat.PresenceResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -35,22 +35,44 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_EMPTY']._serialized_end=27
   _globals['_ROOMREQUEST']._serialized_start=29
   _globals['_ROOMREQUEST']._serialized_end=79
-  _globals['_ROOMRESPONSE']._serialized_start=81
-  _globals['_ROOMRESPONSE']._serialized_end=146
-  _globals['_ROOMINFO']._serialized_start=148
-  _globals['_ROOMINFO']._serialized_end=194
-  _globals['_ROOMLIST']._serialized_start=196
-  _globals['_ROOMLIST']._serialized_end=237
-  _globals['_MESSAGEREQUEST']._serialized_start=239
-  _globals['_MESSAGEREQUEST']._serialized_end=307
-  _globals['_MESSAGERESPONSE']._serialized_start=309
-  _globals['_MESSAGERESPONSE']._serialized_end=399
-  _globals['_HISTORYREQUEST']._serialized_start=401
-  _globals['_HISTORYREQUEST']._serialized_end=467
-  _globals['_CHATMESSAGE']._serialized_start=469
-  _globals['_CHATMESSAGE']._serialized_end=573
-  _globals['_MESSAGELIST']._serialized_start=575
-  _globals['_MESSAGELIST']._serialized_end=625
-  _globals['_CHATSERVICE']._serialized_start=628
-  _globals['_CHATSERVICE']._serialized_end=852
+  _globals['_CREATEGROUPREQUEST']._serialized_start=81
+  _globals['_CREATEGROUPREQUEST']._serialized_end=169
+  _globals['_ROOMRESPONSE']._serialized_start=171
+  _globals['_ROOMRESPONSE']._serialized_end=236
+  _globals['_LEAVEROOMREQUEST']._serialized_start=238
+  _globals['_LEAVEROOMREQUEST']._serialized_end=291
+  _globals['_LEAVEROOMRESPONSE']._serialized_start=293
+  _globals['_LEAVEROOMRESPONSE']._serialized_end=365
+  _globals['_SEARCHUSERSREQUEST']._serialized_start=367
+  _globals['_SEARCHUSERSREQUEST']._serialized_end=428
+  _globals['_USERSUMMARY']._serialized_start=430
+  _globals['_USERSUMMARY']._serialized_end=497
+  _globals['_SEARCHUSERSRESPONSE']._serialized_start=499
+  _globals['_SEARCHUSERSRESPONSE']._serialized_end=554
+  _globals['_ROOMINFO']._serialized_start=556
+  _globals['_ROOMINFO']._serialized_end=602
+  _globals['_ROOMLIST']._serialized_start=604
+  _globals['_ROOMLIST']._serialized_end=645
+  _globals['_MESSAGEREQUEST']._serialized_start=647
+  _globals['_MESSAGEREQUEST']._serialized_end=715
+  _globals['_MESSAGERESPONSE']._serialized_start=717
+  _globals['_MESSAGERESPONSE']._serialized_end=807
+  _globals['_HISTORYREQUEST']._serialized_start=809
+  _globals['_HISTORYREQUEST']._serialized_end=875
+  _globals['_CHATMESSAGE']._serialized_start=877
+  _globals['_CHATMESSAGE']._serialized_end=981
+  _globals['_MESSAGELIST']._serialized_start=983
+  _globals['_MESSAGELIST']._serialized_end=1033
+  _globals['_ROOMMEMBERSREQUEST']._serialized_start=1035
+  _globals['_ROOMMEMBERSREQUEST']._serialized_end=1090
+  _globals['_ROOMMEMBER']._serialized_start=1092
+  _globals['_ROOMMEMBER']._serialized_end=1191
+  _globals['_ROOMMEMBERSLIST']._serialized_start=1193
+  _globals['_ROOMMEMBERSLIST']._serialized_end=1245
+  _globals['_PRESENCEREQUEST']._serialized_start=1247
+  _globals['_PRESENCEREQUEST']._serialized_end=1301
+  _globals['_PRESENCERESPONSE']._serialized_start=1303
+  _globals['_PRESENCERESPONSE']._serialized_end=1338
+  _globals['_CHATSERVICE']._serialized_start=1341
+  _globals['_CHATSERVICE']._serialized_end=1888
 # @@protoc_insertion_point(module_scope)

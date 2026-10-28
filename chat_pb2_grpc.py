@@ -39,6 +39,21 @@ class ChatServiceStub:
                 request_serializer=chat__pb2.RoomRequest.SerializeToString,
                 response_deserializer=chat__pb2.RoomResponse.FromString,
                 _registered_method=True)
+        self.CreateGroup = channel.unary_unary(
+                '/chat.ChatService/CreateGroup',
+                request_serializer=chat__pb2.CreateGroupRequest.SerializeToString,
+                response_deserializer=chat__pb2.RoomResponse.FromString,
+                _registered_method=True)
+        self.LeaveRoom = channel.unary_unary(
+                '/chat.ChatService/LeaveRoom',
+                request_serializer=chat__pb2.LeaveRoomRequest.SerializeToString,
+                response_deserializer=chat__pb2.LeaveRoomResponse.FromString,
+                _registered_method=True)
+        self.SearchUsers = channel.unary_unary(
+                '/chat.ChatService/SearchUsers',
+                request_serializer=chat__pb2.SearchUsersRequest.SerializeToString,
+                response_deserializer=chat__pb2.SearchUsersResponse.FromString,
+                _registered_method=True)
         self.ListRooms = channel.unary_unary(
                 '/chat.ChatService/ListRooms',
                 request_serializer=chat__pb2.Empty.SerializeToString,
@@ -54,12 +69,40 @@ class ChatServiceStub:
                 request_serializer=chat__pb2.HistoryRequest.SerializeToString,
                 response_deserializer=chat__pb2.MessageList.FromString,
                 _registered_method=True)
+        self.GetRoomMembers = channel.unary_unary(
+                '/chat.ChatService/GetRoomMembers',
+                request_serializer=chat__pb2.RoomMembersRequest.SerializeToString,
+                response_deserializer=chat__pb2.RoomMembersList.FromString,
+                _registered_method=True)
+        self.UpdatePresence = channel.unary_unary(
+                '/chat.ChatService/UpdatePresence',
+                request_serializer=chat__pb2.PresenceRequest.SerializeToString,
+                response_deserializer=chat__pb2.PresenceResponse.FromString,
+                _registered_method=True)
 
 
 class ChatServiceServicer:
     """Missing associated documentation comment in .proto file."""
 
     def CreateRoom(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CreateGroup(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def LeaveRoom(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def SearchUsers(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -83,6 +126,18 @@ class ChatServiceServicer:
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetRoomMembers(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def UpdatePresence(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ChatServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -90,6 +145,21 @@ def add_ChatServiceServicer_to_server(servicer, server):
                     servicer.CreateRoom,
                     request_deserializer=chat__pb2.RoomRequest.FromString,
                     response_serializer=chat__pb2.RoomResponse.SerializeToString,
+            ),
+            'CreateGroup': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateGroup,
+                    request_deserializer=chat__pb2.CreateGroupRequest.FromString,
+                    response_serializer=chat__pb2.RoomResponse.SerializeToString,
+            ),
+            'LeaveRoom': grpc.unary_unary_rpc_method_handler(
+                    servicer.LeaveRoom,
+                    request_deserializer=chat__pb2.LeaveRoomRequest.FromString,
+                    response_serializer=chat__pb2.LeaveRoomResponse.SerializeToString,
+            ),
+            'SearchUsers': grpc.unary_unary_rpc_method_handler(
+                    servicer.SearchUsers,
+                    request_deserializer=chat__pb2.SearchUsersRequest.FromString,
+                    response_serializer=chat__pb2.SearchUsersResponse.SerializeToString,
             ),
             'ListRooms': grpc.unary_unary_rpc_method_handler(
                     servicer.ListRooms,
@@ -105,6 +175,16 @@ def add_ChatServiceServicer_to_server(servicer, server):
                     servicer.GetMessages,
                     request_deserializer=chat__pb2.HistoryRequest.FromString,
                     response_serializer=chat__pb2.MessageList.SerializeToString,
+            ),
+            'GetRoomMembers': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetRoomMembers,
+                    request_deserializer=chat__pb2.RoomMembersRequest.FromString,
+                    response_serializer=chat__pb2.RoomMembersList.SerializeToString,
+            ),
+            'UpdatePresence': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdatePresence,
+                    request_deserializer=chat__pb2.PresenceRequest.FromString,
+                    response_serializer=chat__pb2.PresenceResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -134,6 +214,87 @@ class ChatService:
             '/chat.ChatService/CreateRoom',
             chat__pb2.RoomRequest.SerializeToString,
             chat__pb2.RoomResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CreateGroup(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/chat.ChatService/CreateGroup',
+            chat__pb2.CreateGroupRequest.SerializeToString,
+            chat__pb2.RoomResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def LeaveRoom(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/chat.ChatService/LeaveRoom',
+            chat__pb2.LeaveRoomRequest.SerializeToString,
+            chat__pb2.LeaveRoomResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def SearchUsers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/chat.ChatService/SearchUsers',
+            chat__pb2.SearchUsersRequest.SerializeToString,
+            chat__pb2.SearchUsersResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -215,6 +376,60 @@ class ChatService:
             '/chat.ChatService/GetMessages',
             chat__pb2.HistoryRequest.SerializeToString,
             chat__pb2.MessageList.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetRoomMembers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/chat.ChatService/GetRoomMembers',
+            chat__pb2.RoomMembersRequest.SerializeToString,
+            chat__pb2.RoomMembersList.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def UpdatePresence(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/chat.ChatService/UpdatePresence',
+            chat__pb2.PresenceRequest.SerializeToString,
+            chat__pb2.PresenceResponse.FromString,
             options,
             channel_credentials,
             insecure,

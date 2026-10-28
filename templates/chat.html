@@ -7,16 +7,14 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body class="chat-page">
-
     <div class="chat-layout">
-
         <aside class="sidebar">
             <header class="sidebar-header">
                 <div class="brand-icon small">💬</div>
                 <div>
                     <h2>Chat Distribuido</h2>
                     <span class="connection-label">
-                        <span class="status-dot"></span>
+                        <span class="status-dot online"></span>
                         Aplicación web
                     </span>
                 </div>
@@ -32,9 +30,23 @@
 
             <section class="rooms-section">
                 <div class="section-heading">
-                    <h3>Salas de chat</h3>
-                    <button id="create-room-button" class="icon-button"
-                            type="button" title="Crear sala">+</button>
+                    <h3>Conversaciones y grupos</h3>
+                    <div class="section-heading-actions">
+                        <button
+                            id="open-create-group-button"
+                            class="btn-create-group"
+                            type="button"
+                            title="Crear un grupo seleccionando participantes"
+                        >
+                            Crear grupo
+                        </button>
+                        <button
+                            id="create-room-button"
+                            class="icon-button"
+                            type="button"
+                            title="Crear sala pública rápida"
+                        >+</button>
+                    </div>
                 </div>
 
                 <form id="create-room-form" class="hidden">
@@ -42,14 +54,14 @@
                         type="text"
                         id="room-name"
                         maxlength="50"
-                        placeholder="Nombre de la sala"
+                        placeholder="Nombre de la sala pública"
                         required
                     >
-                    <button type="submit" class="btn-primary">Crear</button>
+                    <button type="submit" class="btn-primary">Crear sala</button>
                 </form>
 
                 <div id="rooms-list" class="rooms-list">
-                    <p class="muted">Cargando salas...</p>
+                    <p class="muted">Cargando conversaciones...</p>
                 </div>
             </section>
 
@@ -63,22 +75,40 @@
         </aside>
 
         <main class="conversation">
-
             <header class="conversation-header">
                 <div>
-                    <h1 id="current-room-name">Selecciona una sala</h1>
+                    <h1 id="current-room-name">Selecciona una sala o grupo</h1>
                     <p id="room-description">Mensajería distribuida mediante gRPC</p>
                 </div>
-                <span id="connection-status" class="status-badge">
-                    Conectando...
-                </span>
+                <div class="header-actions">
+                    <span id="connection-status" class="status-badge">
+                        Conectando...
+                    </span>
+                    <button
+                        type="button"
+                        id="leave-group-button"
+                        class="btn-leave-group hidden"
+                        title="Salir de este grupo"
+                    >
+                        Salir del grupo
+                    </button>
+                    <button
+                        type="button"
+                        id="toggle-members-button"
+                        class="btn-toggle-members"
+                        aria-expanded="false"
+                        title="Mostrar u ocultar miembros"
+                    >
+                        Miembros (<span id="members-toggle-count">0</span>)
+                    </button>
+                </div>
             </header>
 
             <section id="messages-container" class="messages-container">
                 <div class="welcome-message">
                     <div class="welcome-icon">💬</div>
                     <h2>Bienvenido al chat</h2>
-                    <p>Selecciona una sala para comenzar a conversar.</p>
+                    <p>Selecciona un grupo o crea uno nuevo para comenzar a conversar.</p>
                 </div>
             </section>
 
@@ -94,21 +124,133 @@
                     disabled
                 >
                 <button type="submit" id="send-button" disabled>
-                    Enviar ➤
+                    Enviar
                 </button>
             </form>
 
             <footer class="conversation-footer">
                 Los mensajes se almacenan en la base de datos del servidor.
             </footer>
-
         </main>
+
+        <aside id="members-panel" class="members-panel" aria-label="Miembros de la sala">
+            <header class="members-header">
+                <div class="members-title-group">
+                    <h3>Miembros del grupo</h3>
+                    <span id="members-room-subtitle" class="members-subtitle">
+                        Sin grupo seleccionado
+                    </span>
+                </div>
+                <span id="members-total-badge" class="members-count-badge">0</span>
+            </header>
+
+            <div class="members-legend" aria-label="Leyenda de estados de conexión">
+                <span class="legend-item">
+                    <span class="status-dot online"></span>
+                    Activo (Conectado)
+                </span>
+                <span class="legend-item">
+                    <span class="status-dot offline"></span>
+                    Inactivo (Desconectado)
+                </span>
+            </div>
+
+            <div id="members-list" class="members-list">
+                <p class="muted">Selecciona un grupo para ver los usuarios que pertenecen a él.</p>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Modal: Crear grupo seleccionando usuarios -->
+    <div id="create-group-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="create-group-title">
+        <div class="modal-card">
+            <header class="modal-header">
+                <h2 id="create-group-title">Crear grupo</h2>
+                <button type="button" id="close-create-group-modal" class="modal-close" aria-label="Cerrar">&times;</button>
+            </header>
+
+            <form id="create-group-form" novalidate>
+                <div class="modal-body">
+                    <div id="create-group-feedback" class="modal-feedback hidden"></div>
+
+                    <div class="form-field">
+                        <label for="group-name-input">Nombre del grupo *</label>
+                        <input
+                            type="text"
+                            id="group-name-input"
+                            maxlength="50"
+                            placeholder="Ej. Proyecto Sistemas Distribuidos"
+                            autocomplete="off"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-field">
+                        <label for="participant-search-input">Agregar participantes</label>
+                        <input
+                            type="text"
+                            id="participant-search-input"
+                            placeholder="Escribe el nombre de usuario para buscar..."
+                            autocomplete="off"
+                        >
+                        <div id="user-search-results" class="user-search-results hidden"></div>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Participantes seleccionados (<span id="selected-participants-count">0</span>)</label>
+                        <div class="creator-chip-info">
+                            Incluido automáticamente: <strong>{{ username }}</strong> (Administrador)
+                        </div>
+                        <div id="selected-participants-list" class="selected-participants-list">
+                            <p class="muted-small">Aún no has seleccionado otros participantes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <footer class="modal-footer">
+                    <button type="button" id="cancel-create-group-button" class="btn-secondary">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="submit-create-group-button" class="btn-primary modal-submit-btn">
+                        Crear grupo
+                    </button>
+                </footer>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Confirmar salida del grupo -->
+    <div id="leave-group-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="leave-group-title">
+        <div class="modal-card modal-card-small">
+            <header class="modal-header">
+                <h2 id="leave-group-title">Salir del grupo</h2>
+                <button type="button" id="close-leave-group-modal" class="modal-close" aria-label="Cerrar">&times;</button>
+            </header>
+
+            <div class="modal-body">
+                <p class="leave-confirm-text">
+                    ¿Estás seguro de que quieres salir del grupo
+                    <strong id="leave-group-target-name"></strong>?
+                </p>
+                <p class="leave-confirm-subtext">
+                    El grupo dejará de aparecer en tus conversaciones activas y ya no podrás ver ni enviar mensajes en él, mientras que los demás integrantes continuarán usándolo normalmente.
+                </p>
+            </div>
+
+            <footer class="modal-footer">
+                <button type="button" id="cancel-leave-group-button" class="btn-secondary">
+                    Cancelar
+                </button>
+                <button type="button" id="confirm-leave-group-button" class="btn-danger">
+                    Salir del grupo
+                </button>
+            </footer>
+        </div>
     </div>
 
     <script>
         window.CHAT_USERNAME = {{ username|tojson }};
     </script>
     <script src="{{ url_for('static', filename='chat.js') }}"></script>
-
 </body>
 </html>
