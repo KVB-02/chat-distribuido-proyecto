@@ -928,3 +928,100 @@ def get_messages(room_id, username, limit=100):
         for row in reversed(rows)
     ]
     return messages, None
+
+def create_room_with_privacy(room_name, creator_username, is_private=False, invitees=None):
+    """Crea una sala pública o privada; el creador es administrador y los invitados miembros."""
+    name = (room_name or "").strip()
+    if not name or len(name) > 50:
+        return None, "El nombre debe tener entre 1 y 50 caracteres."
+    invitees = invitees or []
+    if not isinstance(invitees, (list, tuple)):
+        return None, "La lista de invitados no es válida."
+    with get_connection() as conn:
+        creator = conn.execute("SELECT id, username FROM users WHERE username=?", (creator_username,)).fetchone()
+        if not creator:
+            return None, "El usuario creador no existe."
+        if conn.execute("SELECT 1 FROM rooms WHERE name=? COLLATE NOCASE", (name,)).fetchone():
+            return None, "Ya existe una sala con ese nombre."
+        clean = []
+        seen = {creator_username.casefold()}
+        for raw in invitees:
+            if not isinstance(raw, str):
+                continue
+            uname = raw.strip()
+            if uname and uname.casefold() not in seen:
+                seen.add(uname.casefold())
+                clean.append(uname)
+        resolved = []
+        for uname in clean:
+            row = conn.execute("SELECT id, username FROM users WHERE username=? COLLATE NOCASE", (uname,)).fetchone()
+            if not row:
+                return None, f"El usuario {uname} no existe."
+            resolved.append(row)
+        cur = conn.execute(
+            "INSERT INTO rooms(name,created_by,is_group,is_private) VALUES(?,?,1,?)",
+            (name, creator["id"], 1 if is_private else 0)
+        )
+        rid = cur.lastrowid
+        conn.execute("INSERT INTO room_members(room_id,user_id,role) VALUES(?,?,'admin')", (rid, creator["id"]))
+        for row in resolved:
+            conn.execute("INSERT OR IGNORE INTO room_members(room_id,user_id,role) VALUES(?,?,'member')", (rid, row["id"]))
+            conn.execute("DELETE FROM room_left_users WHERE room_id=? AND user_id=?", (rid, row["id"]))
+        return {"id": rid, "name": name, "is_group": True, "is_private": bool(is_private), "role": "admin"}, None
+
+
+def invite_room_members(room_id, inviter_username, invitees):
+    """Solo el administrador de la sala puede invitar usuarios."""
+    if not isinstance(invitees, (list, tuple)) or not invitees:
+        return None, "Selecciona al menos una persona para invitar."
+    with get_connection() as conn:
+        inviter = conn.execute("SELECT id FROM users WHERE username=?", (inviter_username,)).fetchone()
+        room = conn.execute("SELECT id,name FROM rooms WHERE id=?", (room_id,)).fetchone()
+        if not inviter or not room:
+            return None, "La sala o el usuario no existe."
+        role = conn.execute("SELECT role FROM room_members WHERE room_id=? AND user_id=?", (room_id, inviter["id"])).fetchone()
+        if not role or role["role"] != "admin":
+            return None, "Solo el administrador puede invitar personas."
+        added, already = [], []
+        for raw in invitees:
+            if not isinstance(raw, str):
+                continue
+            uname = raw.strip()
+            if not uname or uname.casefold() == inviter_username.casefold():
+                continue
+            user = conn.execute("SELECT id,username FROM users WHERE username=? COLLATE NOCASE", (uname,)).fetchone()
+            if not user:
+                continue
+            existing = conn.execute("SELECT 1 FROM room_members WHERE room_id=? AND user_id=?", (room_id,user["id"])).fetchone()
+            if existing:
+                already.append(user["username"])
+                continue
+            conn.execute("INSERT INTO room_members(room_id,user_id,role) VALUES(?,?,'member')", (room_id,user["id"]))
+            conn.execute("DELETE FROM room_left_users WHERE room_id=? AND user_id=?", (room_id,user["id"]))
+            added.append(user["username"])
+        return {"added": added, "already": already, "room_name": room["name"]}, None
+
+
+def list_online_users(exclude_username=None):
+    with get_connection() as conn:
+        rows = conn.execute("""
+            SELECT username FROM users
+            WHERE username != ? COLLATE NOCASE
+              AND is_online=1 AND last_seen IS NOT NULL
+              AND (strftime('%s','now','localtime')-strftime('%s',last_seen)) <= ?
+            ORDER BY username COLLATE NOCASE
+        """, (exclude_username or "", ACTIVE_WINDOW_SECONDS)).fetchall()
+    return [r["username"] for r in rows]
+
+
+def list_users(exclude_username=None):
+    with get_connection() as conn:
+        rows = conn.execute("""
+            SELECT username,
+              CASE WHEN is_online=1 AND last_seen IS NOT NULL
+                AND (strftime('%s','now','localtime')-strftime('%s',last_seen)) <= ?
+                THEN 1 ELSE 0 END AS is_active
+            FROM users WHERE username != ? COLLATE NOCASE
+            ORDER BY username COLLATE NOCASE
+        """, (ACTIVE_WINDOW_SECONDS, exclude_username or "")).fetchall()
+    return [{"username": r["username"], "is_active": bool(r["is_active"])} for r in rows]

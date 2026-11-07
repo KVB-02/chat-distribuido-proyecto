@@ -1,5 +1,5 @@
-Flask
-grpcio
-grpcio-tools
-protobuf
-Werkzeug
+Flask>=3.0
+Werkzeug>=3.0
+grpcio>=1.85
+grpcio-tools>=1.85
+protobuf>=7.35.1

@@ -194,102 +194,56 @@ def api_list_rooms():
 @login_required
 def api_create_room():
     data = request.get_json(silent=True) or {}
-    room_name = (data.get("name") or "").strip()
-    if not room_name:
-        return jsonify({"error": "Escribe el nombre de la sala."}), 400
+    room, error = database.create_room_with_privacy(
+        data.get("name", ""), session["username"],
+        bool(data.get("is_private", False)), data.get("invites", [])
+    )
+    if error:
+        return jsonify({"error": error}), 400
+    return jsonify(room), 201
 
-    channel = None
-    try:
-        channel, stub = get_grpc_stub()
-        response = stub.CreateRoom(
-            chat_pb2.RoomRequest(
-                room_name=room_name,
-                username=session["username"]
-            ),
-            timeout=3
-        )
-        if not response.success:
-            return jsonify({"error": response.message}), 400
 
-        return jsonify({
-            "id": response.room_id,
-            "name": room_name,
-            "is_group": True,
-            "is_private": False,
-            "message": response.message
-        }), 201
-    except grpc.RpcError:
-        return jsonify({
-            "error": "No se puede conectar con el servidor gRPC."
-        }), 503
-    finally:
-        if channel:
-            channel.close()
+@app.route("/api/presence", methods=["POST"])
+@login_required
+def api_presence():
+    database.update_user_presence(session["username"], True)
+    return jsonify({"ok": True})
+
+
+@app.route("/api/users", methods=["GET"])
+@login_required
+def api_all_users():
+    database.update_user_presence(session["username"], True)
+    return jsonify({"users": database.list_users(session["username"])})
+
+
+@app.route("/api/users/online", methods=["GET"])
+@login_required
+def api_online_users():
+    database.update_user_presence(session["username"], True)
+    return jsonify({"users": database.list_online_users(session["username"])})
+
+
+@app.route("/api/rooms/<int:room_id>/invite", methods=["POST"])
+@login_required
+def api_invite_room(room_id):
+    data = request.get_json(silent=True) or {}
+    result, error = database.invite_room_members(room_id, session["username"], data.get("users", []))
+    if error:
+        return jsonify({"error": error}), 403 if "administrador" in error else 400
+    return jsonify(result)
 
 
 @app.route("/api/groups", methods=["POST"])
 @login_required
 def api_create_group():
     data = request.get_json(silent=True) or {}
-    raw_name = data.get("name", "")
-    participants = data.get("participants", [])
-
-    if not isinstance(raw_name, str) or not raw_name.strip():
-        return jsonify({
-            "error": "El nombre del grupo es obligatorio y no puede contener solo espacios."
-        }), 400
-
-    if not isinstance(participants, list):
-        return jsonify({
-            "error": "La lista de participantes no es válida."
-        }), 400
-
-    group_name = raw_name.strip()
-
-    channel = None
-    try:
-        channel, stub = get_grpc_stub()
-        if hasattr(stub, "CreateGroup") and hasattr(chat_pb2, "CreateGroupRequest"):
-            response = stub.CreateGroup(
-                chat_pb2.CreateGroupRequest(
-                    group_name=group_name,
-                    creator_username=session["username"],
-                    participants=[str(p) for p in participants if isinstance(p, str)]
-                ),
-                timeout=3
-            )
-            if not response.success:
-                return jsonify({"error": response.message}), 400
-            return jsonify({
-                "id": response.room_id,
-                "name": group_name,
-                "is_group": True,
-                "is_private": True,
-                "message": response.message
-            }), 201
-        else:
-            stub.ListRooms(chat_pb2.Empty(), timeout=3)
-            group, error = database.create_group_with_members(
-                group_name,
-                session["username"],
-                participants
-            )
-            if error:
-                return jsonify({"error": error}), 400
-            return jsonify({
-                "id": group["id"],
-                "name": group["name"],
-                "is_group": True,
-                "is_private": True,
-                "message": "Grupo creado correctamente."
-            }), 201
-    except grpc.RpcError:
-        return jsonify({
-            "error": "No se puede conectar con el servidor gRPC."
-        }), 503
-    finally:
-        if channel:
-            channel.close()
+    group, error = database.create_room_with_privacy(
+        data.get("name", ""), session["username"], True, data.get("participants", [])
+    )
+    if error:
+        return jsonify({"error": error}), 400
+    return jsonify(group), 201
 
 
 @app.route("/api/rooms/<int:room_id>/join", methods=["POST"])
